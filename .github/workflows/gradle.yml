@@ -28,11 +28,6 @@ jobs:
         run: ./gradlew --info --stacktrace jlink
       - name: Execute jpackage
         run: ./gradlew --info --stacktrace jpackage
-      - name: Upload DEB as an artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ExpenseApplication-jdk${{ matrix.java }}-${{ matrix.os }}-deb
-          path: build/jpackage/*.deb
       - name: Upload DMG as an artifact
         uses: actions/upload-artifact@v2
         with:
