@@ -6,8 +6,8 @@ plugins {
     id 'org.beryx.jlink' version '3.0.1'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'com.example'
+version '1.0.0'
 
 project.description = "Simple tool for tracking your finances"
 
@@ -16,32 +16,38 @@ repositories {
 }
 
 ext {
-    junitVersion = '5.10.0'
+    junitVersion = '5.9.2'
 }
+
+sourceCompatibility = '21'
+targetCompatibility = '21'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
 application {
-    mainModule = 'org.example.demo'
-    mainClass = 'org.example.demo.ExpenseApplication'
+    mainModule = 'com.example.financemanager'
+    mainClass = 'com.example.financemanager.FinanceTrackerApplication'
 }
 
 javafx {
-    version = '21'
+    version = '21-ea+24'
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-
-    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.45.1.0'
+    implementation("org.xerial:sqlite-jdbc:3.44.1.0")
     implementation("org.apache.logging.log4j:log4j-core:2.22.1")
     implementation("org.slf4j:slf4j-log4j12:2.0.11")
     implementation("org.slf4j:slf4j-api:2.0.11")
 
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+    testImplementation("org.testfx:testfx-core:4.0.17")
+    testImplementation("org.testfx:testfx-junit5:4.0.17")
+    testImplementation("org.hamcrest:hamcrest:2.1")
 }
 
 test {
@@ -52,7 +58,7 @@ jlink {
     imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
-        name = 'ExpenseApp'
+        name = 'FinanceTracker'
     }
     addExtraDependencies('slf4j')
     jpackage {
@@ -61,27 +67,28 @@ jlink {
                 '--copyright', 'None'
         ]
         installerType = project.findProperty('installerType')
-        if (org.gradle.internal.os.OperatingSystem.current().linux) {
-            installerType = "deb"
-            imageOptions += ['--icon', 'src/main/resources/org/example/demo/assets/icon.png']
-            installerOptions += [
-                    '--linux-menu-group', 'Office',
-                    '--linux-shortcut'
-                    ]
-        }
+        // we will pass this from the command line (example: -PinstallerType=msi)
         if (org.gradle.internal.os.OperatingSystem.current().windows) {
-            imageOptions += ['--icon', 'src/main/resources/org/example/demo/assets/icon.ico']
+            imageOptions += ['--icon', 'src/main/resources/com/example/financemanager/assets/icon.ico']
             installerOptions += [
                     '--win-per-user-install', '--win-dir-chooser',
                     '--win-menu', '--win-shortcut'
             ]
         }
         if (org.gradle.internal.os.OperatingSystem.current().macOsX) {
-            imageOptions += ['--icon', 'src/main/resources/org/example/demo/assets/icon.icns']
+            imageOptions += ['--icon', 'src/main/resources/com/example/financemanager/assets/icon.icns']
             installerOptions += [
                     '--mac-package-name', 'FinanceTracker',
-                    '--mac-package-identifier', 'org.example.demo',
-                    '--mac-package-signing-prefix', 'org.example.demo'
+                    '--mac-package-identifier', 'com.example.financemanager',
+                    '--mac-package-signing-prefix', 'com.example.financemanager'
+            ]
+        }
+        if (org.gradle.internal.os.OperatingSystem.current().linux) {
+            installerType = "deb"
+            imageOptions += ['--icon', 'src/main/resources/com/example/financemanager/assets/icon.png']
+            installerOptions += [
+                    '--linux-menu-group', 'Office',
+                    '--linux-shortcut'
             ]
         }
     }

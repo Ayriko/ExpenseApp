@@ -1,37 +1,34 @@
-package org.example.demo;
+package com.example.financemanager;
 
+import com.example.financemanager.db.Database;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 
-import java.util.Objects;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.example.demo.Database.isOK;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ExpenseApplication extends Application {
+public class FinanceTrackerApplication extends Application {
     static {
         System.setProperty("app.root", findAndCreateOSFolder());
     }
-    private static final Logger log = getLogger(ExpenseApplication.class);
-    @Override
-    public void start(Stage stage) throws Exception {
-        if(isOK()) {
-            System.out.println(isOK());
-            FXMLLoader fxmlLoader = new FXMLLoader(ExpenseApplication.class.getResource("expense-view.fxml"));
-            Parent root = fxmlLoader.load();
+    private static final Logger log = getLogger(FinanceTrackerApplication.class);
 
-            Scene scene = new Scene(root, 720, 240);
-            stage.setTitle("Tableau de dépense");
-            stage.getIcons().add(new Image(Objects.requireNonNull(ExpenseApplication.class.getResourceAsStream("assets/icon.png"))));
+    @Override
+    public void start(Stage stage) throws IOException {
+        if (Database.isOK()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(FinanceTrackerApplication.class.getResource("dashboard-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Finance Tracker");
+            stage.getIcons().add(new Image(FinanceTrackerApplication.class.getResourceAsStream("assets/icon.png")));
             stage.setScene(scene);
             stage.show();
         } else {

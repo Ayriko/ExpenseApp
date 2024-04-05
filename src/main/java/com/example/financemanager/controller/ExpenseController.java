@@ -1,15 +1,14 @@
-package org.example.demo;
+package com.example.financemanager.controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.example.financemanager.db.ExpenseDAO;
+import com.example.financemanager.model.Expense;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TableView;
-import java.util.Optional;
 import org.slf4j.Logger;
 
-import static org.example.demo.ExpenseDAO.fetchALlDataFromDB;
+import java.util.Optional;
 
 public class ExpenseController {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(ExpenseController.class);
@@ -17,17 +16,14 @@ public class ExpenseController {
     @FXML
     private TableView<Expense> expenseTable;
 
-    private final ObservableList<Expense> items = FXCollections.observableArrayList();
-
     public void initialize() {
-        fetchALlDataFromDB(items);
-        expenseTable.setItems(items);
+        expenseTable.setItems(ExpenseDAO.getExpenses());
     }
 
     public void addExpense(ActionEvent event) {
         Dialog<Expense> addPersonDialog = new ExpenseDialog();
         Optional<Expense> result = addPersonDialog.showAndWait();
-        result.ifPresent(items::add);
+        result.ifPresent(ExpenseDAO::insertExpense);
 
         log.debug(result.toString());
         event.consume();

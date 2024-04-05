@@ -1,8 +1,10 @@
-package org.example.demo;
+package com.example.financemanager.model;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class Expense {
     private final LocalDate date;
@@ -31,63 +33,79 @@ public class Expense {
         this.other = other;
     }
 
-    public String getDate() {
-        return date.format(DATE_FORMAT);
+    public StringProperty dateProperty() {
+        return new SimpleStringProperty(date.format(DATE_FORMAT));
     }
 
-    public LocalDate getFormattedDate() { return date ;}
-
-    public String getTotal() {
-        return String.format(PRICE_FORMAT, total);
+    public StringProperty totalProperty() {
+        return formatAmount(total);
     }
 
-    public String getHousing() { return String.format(PRICE_FORMAT, housing); }
-
-    public String getFood() {
-        return String.format(PRICE_FORMAT, food);
+    private SimpleStringProperty formatAmount(float amount) {
+        return new SimpleStringProperty(String.format(PRICE_FORMAT, amount));
     }
 
-    public String getGoingOut() {
-        return String.format(PRICE_FORMAT, goingOut);
+    public StringProperty housingProperty() {
+        return formatAmount(housing);
     }
 
-    public String getTransportation() {
-        return String.format(PRICE_FORMAT, transportation);
+    public StringProperty foodProperty() {
+        return formatAmount(food);
     }
 
-    public String getTravel() {
-        return String.format(PRICE_FORMAT, travel);
+    public StringProperty goingOutProperty() {
+        return formatAmount(goingOut);
     }
 
-    public String getTax() {
-        return String.format(PRICE_FORMAT, tax);
+    public StringProperty transportationProperty() {
+        return formatAmount(transportation);
     }
 
-    public String getOther() {
-        return String.format(PRICE_FORMAT, other);
+    public StringProperty travelProperty() {
+        return formatAmount(travel);
     }
 
-    public float getHousingV() { return housing; }
+    public StringProperty taxProperty() {
+        return formatAmount(tax);
+    }
 
-    public float getFoodV() { return food; }
+    public StringProperty otherProperty() {
+        return formatAmount(other);
+    }
 
-    public float getGoingOutV() {
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public float getTotal() {
+        return total;
+    }
+
+    public float getHousing() {
+        return housing;
+    }
+
+    public float getFood() {
+        return food;
+    }
+
+    public float getGoingOut() {
         return goingOut;
     }
 
-    public float getTransportationV() {
+    public float getTransportation() {
         return transportation;
     }
 
-    public float getTravelV() {
+    public float getTravel() {
         return travel;
     }
 
-    public float getTaxV() {
+    public float getTax() {
         return tax;
     }
 
-    public float getOtherV() {
+    public float getOther() {
         return other;
     }
 
@@ -104,5 +122,9 @@ public class Expense {
                 ", tax=" + tax +
                 ", other=" + other +
                 '}';
+    }
+
+    public int compareTo(Expense expense) {
+        return -this.date.compareTo(expense.date);
     }
 }

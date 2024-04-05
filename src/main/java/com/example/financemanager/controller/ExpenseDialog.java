@@ -1,5 +1,7 @@
-package org.example.demo;
+package com.example.financemanager.controller;
 
+import com.example.financemanager.FinanceTrackerApplication;
+import com.example.financemanager.model.Expense;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,8 +12,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
-
-import static org.example.demo.ExpenseDAO.insertExpense;
 
 public class ExpenseDialog extends Dialog<Expense> {
     @FXML
@@ -43,7 +43,7 @@ public class ExpenseDialog extends Dialog<Expense> {
 
     public ExpenseDialog() {
         try {
-            FXMLLoader loader = new FXMLLoader(ExpenseApplication.class.getResource("expense-dialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(FinanceTrackerApplication.class.getResource("expense-dialog.fxml"));
             loader.setController(this);
 
             DialogPane dialogPane = loader.load();
@@ -52,8 +52,10 @@ public class ExpenseDialog extends Dialog<Expense> {
             setDialogPane(dialogPane);
             initResultConverter();
 
+            // Disable button when all field are not filled
             computeIfButtonIsDisabled();
 
+            // Ensure only numeric input are set in the fields
             forceDoubleFormat();
 
             forceDateFormat();
@@ -127,7 +129,7 @@ public class ExpenseDialog extends Dialog<Expense> {
                 return null;
             }
 
-            Expense newExpense = new Expense(
+            return new Expense(
                     LocalDate.parse(dateField.getText(), DateTimeFormatter.ofPattern("dd/MM/yy")),
                     Float.parseFloat(housingField.getText()),
                     Float.parseFloat(foodField.getText()),
@@ -137,14 +139,11 @@ public class ExpenseDialog extends Dialog<Expense> {
                     Float.parseFloat(taxField.getText()),
                     Float.parseFloat(otherField.getText())
             );
-
-            insertExpense(newExpense);
-
-            return newExpense;
         });
     }
 
     @FXML
     private void initialize() {
+
     }
 }

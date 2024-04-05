@@ -1,4 +1,4 @@
-module org.example.demo {
+module com.example.financemanager {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
@@ -6,6 +6,10 @@ module org.example.demo {
     requires org.slf4j;
 
 
-    opens org.example.demo to javafx.fxml;
-    exports org.example.demo;
+    opens com.example.financemanager to javafx.fxml;
+    exports com.example.financemanager;
+    exports com.example.financemanager.model;
+    exports com.example.financemanager.controller;
+    opens com.example.financemanager.controller to javafx.fxml;
+    opens com.example.financemanager.model to javafx.fxml;
 }

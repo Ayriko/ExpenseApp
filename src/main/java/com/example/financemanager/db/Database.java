@@ -1,4 +1,4 @@
-package org.example.demo;
+package com.example.financemanager.db;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static org.example.demo.ExpenseApplication.findAndCreateOSFolder;
+import static com.example.financemanager.FinanceTrackerApplication.findAndCreateOSFolder;
 
 public class Database {
     private static final Logger log = LoggerFactory.getLogger(Database.class);
@@ -23,6 +23,8 @@ public class Database {
      * Currently only table needed
      */
     private static final String requiredTable = "Expense";
+
+    private static final String requiredTable2 = "Revenu";
 
     public static boolean isOK() {
         if (!checkDrivers()) return false; //driver errors
@@ -67,10 +69,23 @@ public class Database {
                      );
                    """;
 
+        String createTables2 =
+                """
+                        CREATE TABLE IF NOT EXISTS revenu(
+                             period TEXT NOT NULL,
+                             salary REAL NOT NULL,
+                             help REAL NOT NULL,
+                             selfEmployed REAL NOT NULL,
+                             passif REAL NOT NULL,
+                             other REAL NOT NULL
+                     );
+                   """;
+
         try (Connection connection = Database.connect()) {
-            assert connection != null;
             PreparedStatement statement = connection.prepareStatement(createTables);
             statement.executeUpdate();
+            PreparedStatement statement2 = connection.prepareStatement(createTables2);
+            statement2.executeUpdate();
             return true;
         } catch (SQLException exception) {
             log.error("Could not create tables in database", exception);
